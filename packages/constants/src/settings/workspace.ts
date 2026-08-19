@@ -62,6 +62,17 @@ export const WORKSPACE_SETTINGS: Record<TWorkspaceSettingsTabs, TWorkspaceSettin
     access: [EUserWorkspaceRoles.ADMIN],
     highlight: (pathname: string, baseUrl: string) => pathname === `${baseUrl}/settings/webhooks/`,
   },
+  // Gate 8 (Prom UI Integration, core_patches/0002-prom-integration-ui): LINE/Discord
+  // installation management. Reuses the i18n copy that already existed at
+  // workspace_settings.settings.integrations (present but unwired before this patch — see the
+  // patch README for the upstream-collision risk this reuse carries).
+  integrations: {
+    key: "integrations",
+    i18n_label: "workspace_settings.settings.integrations.title",
+    href: `/settings/integrations`,
+    access: [EUserWorkspaceRoles.ADMIN],
+    highlight: (pathname: string, baseUrl: string) => pathname === `${baseUrl}/settings/integrations/`,
+  },
 };
 
 export const WORKSPACE_SETTINGS_ACCESS = Object.fromEntries(
@@ -76,5 +87,5 @@ export const GROUPED_WORKSPACE_SETTINGS: Record<WORKSPACE_SETTINGS_CATEGORY, TWo
     WORKSPACE_SETTINGS["export"],
   ],
   [WORKSPACE_SETTINGS_CATEGORY.FEATURES]: [],
-  [WORKSPACE_SETTINGS_CATEGORY.DEVELOPER]: [WORKSPACE_SETTINGS["webhooks"]],
+  [WORKSPACE_SETTINGS_CATEGORY.DEVELOPER]: [WORKSPACE_SETTINGS["webhooks"], WORKSPACE_SETTINGS["integrations"]],
 };

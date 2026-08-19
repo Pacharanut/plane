@@ -65,6 +65,28 @@
       "title": "Connections",
       "heading": "Connections",
       "description": "Manage your workspace connections settings."
+    },
+    "connected_accounts": {
+      "title": "Connected accounts",
+      "description": "Link your LINE and Discord accounts to receive and manage updates from Prom.",
+      "connect": "Connect account",
+      "unlink": "Unlink",
+      "unlinking": "Unlinking",
+      "linked_at": "Linked {{linked_at}}",
+      "empty_state": {
+        "title": "No connected accounts",
+        "description": "Connect a LINE or Discord account to get started."
+      },
+      "connect_modal": {
+        "title": "Connect an account",
+        "code_instructions": "Send this code from the connected LINE or Discord account to finish linking.",
+        "expires_at": "Expires {{expires_at}}",
+        "no_installations": "No integrations available to connect in this workspace."
+      },
+      "unlink_modal": {
+        "title": "Unlink account",
+        "content": "Are you sure you want to unlink {{channel_user_id}}? You will stop receiving updates from this account."
+      }
     }
   },
   "profile": {
@@ -103,7 +125,8 @@
       "preferences": "Preferences",
       "notifications": "Notifications",
       "api-tokens": "Personal Access Tokens",
-      "connections": "Connections"
+      "connections": "Connections",
+      "connected-accounts": "Connected accounts"
     },
     "tabs": {
       "summary": "Summary",

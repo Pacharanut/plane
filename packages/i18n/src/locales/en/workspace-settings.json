@@ -504,5 +504,52 @@
         "description": "Find all your previous imports here and download them."
       }
     }
+  },
+  "prom_integrations": {
+    "add_installation": "Add installation",
+    "create_success": "Integration created successfully.",
+    "create_error": "Could not create the integration. Please check your credentials and try again.",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "revoke": "Revoke",
+    "revoking": "Revoking",
+    "manage_workspaces": "Manage workspaces",
+    "link_this_workspace": "Link this workspace",
+    "unlink": "Unlink",
+    "no_workspaces_linked": "No workspaces linked to this integration yet.",
+    "create_modal": {
+      "title": "Add integration",
+      "display_name": "Display name",
+      "channel_access_token": "Channel access token",
+      "channel_secret": "Channel secret",
+      "bot_token": "Bot token",
+      "submit": "Create integration"
+    },
+    "test_connection": {
+      "action": "Test connection",
+      "success": "Connection is valid.",
+      "failure": "Connection test failed."
+    },
+    "revoke_modal": {
+      "title": "Revoke integration",
+      "content": "Are you sure you want to revoke {{name}}? This cannot be undone and all linked workspaces will stop receiving updates."
+    },
+    "link_workspace": {
+      "success": "Workspace linked successfully."
+    },
+    "empty_state": {
+      "title": "No integrations yet",
+      "description": "Add a LINE or Discord integration to start syncing updates with this workspace."
+    },
+    "audit_log": {
+      "title": "Audit log",
+      "occurred_at": "Time",
+      "action": "Action",
+      "result_status": "Status",
+      "error_code": "Error code",
+      "empty": "No audit log entries yet.",
+      "previous": "Previous",
+      "next": "Next"
+    }
   }
 }
