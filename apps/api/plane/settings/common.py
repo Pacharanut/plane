@@ -111,6 +111,7 @@ INSTALLED_APPS = [
     "plane.license",
     "plane.api",
     "plane.authentication",
+    "plane.prom_bridge",
     # Third-party things
     "rest_framework",
     "corsheaders",
@@ -152,6 +153,15 @@ REST_FRAMEWORK = {
 
 # API key throttle rate (DRF SimpleRateThrottle format, e.g. "60/minute")
 API_KEY_RATE_LIMIT = os.environ.get("API_KEY_RATE_LIMIT", "60/minute")
+
+# Prom Bridge (core_patches/0001-prom-bridge): relays browser-authenticated admin/connected-
+# accounts calls to the Prom Integration Hub (services/prom-integration-hub), server-to-server.
+# All four must be set for a deployment to use Prom -- prom_bridge views return 503 if any are
+# missing rather than raising, so a Plane instance with no Prom Hub configured is unaffected.
+PROM_HUB_BASE_URL = os.environ.get("PROM_HUB_BASE_URL")  # e.g. https://hub.internal.example.com
+PROM_HUB_SERVICE_TOKEN = os.environ.get("PROM_HUB_SERVICE_TOKEN")  # matches Hub's HUB_SERVICE_TOKEN
+PROM_INSTANCE_ID = os.environ.get("PROM_INSTANCE_ID")  # this deployment's PromInstance UUID in Hub
+PROM_CUSTOMER_ID = os.environ.get("PROM_CUSTOMER_ID")  # this deployment's Customer UUID in Hub
 
 # Django Auth Backend
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)  # default
