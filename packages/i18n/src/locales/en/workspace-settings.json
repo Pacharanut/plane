@@ -513,6 +513,8 @@
     "deactivate": "Deactivate",
     "revoke": "Revoke",
     "revoking": "Revoking",
+    "delete": "Delete",
+    "deleting": "Deleting",
     "manage_workspaces": "Manage workspaces",
     "link_this_workspace": "Link this workspace",
     "unlink": "Unlink",
@@ -533,6 +535,10 @@
     "revoke_modal": {
       "title": "Revoke integration",
       "content": "Are you sure you want to revoke {{name}}? This cannot be undone and all linked workspaces will stop receiving updates."
+    },
+    "delete_modal": {
+      "title": "Delete integration",
+      "content": "Are you sure you want to permanently delete {{name}}? This cannot be undone. Only available for revoked integrations with no account-linking history."
     },
     "link_workspace": {
       "success": "Workspace linked successfully."

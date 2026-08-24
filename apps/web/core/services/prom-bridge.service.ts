@@ -154,6 +154,14 @@ export class PromBridgeService extends APIService {
       });
   }
 
+  async deleteInstallation(workspaceSlug: string, installationId: string): Promise<void> {
+    return this.delete(`/api/prom-bridge/workspaces/${workspaceSlug}/installations/${installationId}/`)
+      .then(() => undefined)
+      .catch((error) => {
+        throw error?.response?.data;
+      });
+  }
+
   async getOrCreateWorkspaceConnection(workspaceSlug: string): Promise<TPromWorkspaceConnection> {
     return this.post(`/api/prom-bridge/workspaces/${workspaceSlug}/connection/`)
       .then((response) => response?.data)

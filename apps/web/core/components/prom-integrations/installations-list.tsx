@@ -34,6 +34,7 @@ export function InstallationsList(props: Props) {
   const { workspaceSlug, installations, onChanged } = props;
   const { t } = useTranslation();
   const [revokeTarget, setRevokeTarget] = useState<TPromInstallation | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<TPromInstallation | null>(null);
   const [manageTarget, setManageTarget] = useState<TPromInstallation | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
@@ -85,6 +86,20 @@ export function InstallationsList(props: Props) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setBusyId(deleteTarget.id);
+    try {
+      await promBridgeService.deleteInstallation(workspaceSlug, deleteTarget.id);
+      onChanged();
+    } catch (error: any) {
+      setToast({ type: TOAST_TYPE.ERROR, title: t("toast.error"), message: error?.message });
+    } finally {
+      setBusyId(null);
+      setDeleteTarget(null);
+    }
+  };
+
   return (
     <div className="divide-y divide-subtle rounded-md border-[0.5px] border-subtle">
       {revokeTarget && (
@@ -96,6 +111,17 @@ export function InstallationsList(props: Props) {
           title={t("prom_integrations.revoke_modal.title")}
           content={t("prom_integrations.revoke_modal.content", { name: revokeTarget.display_name })}
           primaryButtonText={{ loading: t("prom_integrations.revoking"), default: t("prom_integrations.revoke") }}
+        />
+      )}
+      {deleteTarget && (
+        <AlertModalCore
+          isOpen
+          handleClose={() => setDeleteTarget(null)}
+          handleSubmit={handleDelete}
+          isSubmitting={busyId === deleteTarget.id}
+          title={t("prom_integrations.delete_modal.title")}
+          content={t("prom_integrations.delete_modal.content", { name: deleteTarget.display_name })}
+          primaryButtonText={{ loading: t("prom_integrations.deleting"), default: t("prom_integrations.delete") }}
         />
       )}
       {manageTarget && (
@@ -145,6 +171,11 @@ export function InstallationsList(props: Props) {
             {installation.status !== "revoked" && (
               <Button variant="error-fill" size="sm" onClick={() => setRevokeTarget(installation)}>
                 {t("prom_integrations.revoke")}
+              </Button>
+            )}
+            {installation.status === "revoked" && (
+              <Button variant="error-fill" size="sm" onClick={() => setDeleteTarget(installation)}>
+                {t("prom_integrations.delete")}
               </Button>
             )}
           </div>
