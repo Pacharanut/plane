@@ -84,6 +84,19 @@ class PromInstallationDetailView(BaseAPIView):
         response = client.request("GET", f"/api/v1/installations/{installation_id}")
         return _relay_response(response)
 
+    def delete(self, request, slug, installation_id):
+        """Hard-delete an installation an admin created by mistake and never actually used. Hub
+        only allows this when the installation is `revoked` and has zero linked-identity history
+        -- this relay does no validation of its own, same "no business logic here" rule as every
+        other view in this file; Hub's own error response (409 INSTALLATION_NOT_REVOKED /
+        INSTALLATION_HAS_LINKED_IDENTITIES) is what surfaces to the admin if those aren't met."""
+        try:
+            client = HubClient()
+        except HubNotConfigured:
+            return _not_configured_response()
+        response = client.request("DELETE", f"/api/v1/installations/{installation_id}")
+        return _relay_response(response)
+
 
 class PromInstallationTestConnectionView(BaseAPIView):
     permission_classes = [WorkspaceOwnerPermission]

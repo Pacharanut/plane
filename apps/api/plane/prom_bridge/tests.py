@@ -88,6 +88,16 @@ class PromBridgeWorkspacePermissionTests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_member_role_is_rejected_from_installation_delete(self):
+        self.client.force_authenticate(user=self.member)
+        response = self.client.delete(
+            reverse(
+                "prom-bridge-installation-detail",
+                kwargs={"slug": self.workspace.slug, "installation_id": uuid4()},
+            )
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     @patch("plane.prom_bridge.client.pinned_fetch")
     def test_workspace_connection_relays_real_workspace_fields(self, mock_pinned_fetch):
         """PromWorkspaceConnectionView must resolve the real Workspace row (id/slug/name) itself
@@ -169,6 +179,43 @@ class PromBridgeRelayResponseTests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data["error_code"], "NOT_FOUND")
+
+    @patch("plane.prom_bridge.client.pinned_fetch")
+    def test_delete_installation_relays_success(self, mock_pinned_fetch):
+        installation_id = uuid4()
+        mock_pinned_fetch.return_value = _fake_response(204, None)
+        response = self.client.delete(
+            reverse(
+                "prom-bridge-installation-detail",
+                kwargs={"slug": self.workspace.slug, "installation_id": installation_id},
+            )
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        called_url = mock_pinned_fetch.call_args.args[1]
+        self.assertIn(f"/api/v1/installations/{installation_id}", called_url)
+        self.assertEqual(mock_pinned_fetch.call_args.args[0], "DELETE")
+
+    @patch("plane.prom_bridge.client.pinned_fetch")
+    def test_delete_installation_relays_hub_conflict(self, mock_pinned_fetch):
+        """Hub's 409 INSTALLATION_NOT_REVOKED/INSTALLATION_HAS_LINKED_IDENTITIES must pass
+        through unchanged -- this relay does no validation of its own, see
+        PromInstallationDetailView.delete's docstring."""
+        mock_pinned_fetch.return_value = _fake_response(
+            409,
+            {
+                "error_code": "INSTALLATION_NOT_REVOKED",
+                "message": "installation must be revoked before it can be deleted",
+                "correlation_id": "abc",
+            },
+        )
+        response = self.client.delete(
+            reverse(
+                "prom-bridge-installation-detail",
+                kwargs={"slug": self.workspace.slug, "installation_id": uuid4()},
+            )
+        )
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+        self.assertEqual(response.data["error_code"], "INSTALLATION_NOT_REVOKED")
 
 
 @override_settings(**_HUB_SETTINGS)
